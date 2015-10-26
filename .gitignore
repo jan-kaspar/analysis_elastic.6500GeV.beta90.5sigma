@@ -1,0 +1,11 @@
+*.pdf
+
+.*
+*.log_*
+*.root
+
+*.ods
+*.tfs
+
+alignment/print_fit
+alignment/test_linearity
