@@ -15,7 +15,8 @@ void InitInputFiles()
 
 	// 2015_10_13_fill4489, DS1
 
-	std::string prefix = "root://eostotem.cern.ch//eos/totem/user/j/jkaspar/reco/sr,pass2/";
+	std::string prefix = "root://eostotem.cern.ch//eos/totem/data/cmstotem/2015/90m/Totem/Ntuple/version1/";
+
 	input_files.push_back(prefix + "9836_EVB11_1.0-9_ntuple.root");
 	input_files.push_back(prefix + "9838_EVB11_1.0-9_ntuple.root");
 	input_files.push_back(prefix + "9840_EVB11_1.0-9_ntuple.root");
