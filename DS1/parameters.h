@@ -17,8 +17,14 @@ string luminosity_data_file;
 void Init_base()
 {
 	// selection of bunches
-	keepAllBunches = true;
-	//bunchMap[94882].push_back(0);
+	keepAllBunches = false;
+	bunchMap[9836] = { 1825 };
+	bunchMap[9838] = { 1825 };
+	bunchMap[9840] = { 1825 };
+	bunchMap[9841] = { 1825 };
+	bunchMap[9843] = { 40, 1825 };
+	bunchMap[9844] = { 40, 1825 };
+	bunchMap[9845] = { 40, 1825 };
 
 	// alignment settings
 /*
