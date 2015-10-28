@@ -19,10 +19,6 @@ drawGridDef = true;
 
 TGraph_errorBar = None;
 
-real time_min = 4.4;
-real time_max = 7.2;
-
-
 //----------------------------------------------------------------------------------------------------
 NewRow();
 

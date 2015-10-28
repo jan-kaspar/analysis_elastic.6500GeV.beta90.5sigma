@@ -18,7 +18,6 @@ void AddRun(string ds, int r, real f, real t, pen p = yellow)
 	colors.push(p);
 }
 
-// the entire period
 AddRun("DS1", 9836, 16138, 17379);
 AddRun("DS1", 9838, 17539, 18347);
 AddRun("DS1", 9840, 18523, 22095);
@@ -26,6 +25,10 @@ AddRun("DS1", 9841, 22203, 22884);
 AddRun("DS1", 9843, 23093, 23540);
 AddRun("DS1", 9844, 23614, 23773);
 AddRun("DS1", 9845, 23841, 25237);
+
+// in hours
+real time_min = 4.4;
+real time_max = 7.2;
 
 //----------------------------------------------------------------------------------------------------
 

@@ -13,9 +13,6 @@ string topDir = "../../";
 xSizeDef = 10cm;
 ySizeDef = 6cm;
 
-real time_min = 4.4;
-real time_max = 7.2;
-
 xTicksDef = LeftTicks(1., 0.2);
 
 drawGridDef = true;
