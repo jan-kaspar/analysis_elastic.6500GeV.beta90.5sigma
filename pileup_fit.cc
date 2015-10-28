@@ -51,7 +51,7 @@ void DoFit(TFile *inF, const string &dir, const string &label)
 
 	// fit for each run and compile global graph
 	TF1 *pol0 = new TF1("pol0", "[0]");
-	TF1 *pol1 = new TF1("pol1", "[0] + [1]*x");
+	//TF1 *pol1 = new TF1("pol1", "[0] + [1]*x");
 
 	TGraph *g_gl = new TGraphErrors();
 	g_gl->SetName(label.c_str());
@@ -111,10 +111,10 @@ int main(int argc, char **argv)
 	TFile *outF = new TFile((string("pileup_fit_") + argv[1] + ".root").c_str(), "recreate");
 
 	gDirectory = outF->mkdir("45b_56t");
-	DoFit(inF, "45b/dgn/pat_suff && pat_suff, L || R", "dgn");
+	DoFit(inF, "45b_56t/dgn/pat_suff && pat_suff, L || R", "dgn");
 
 	gDirectory = outF->mkdir("45t_56b");
-	DoFit(inF, "45t/dgn/pat_suff && pat_suff, L || R", "dgn");
+	DoFit(inF, "45t_56b/dgn/pat_suff && pat_suff, L || R", "dgn");
 
 	delete outF;
 	return 0;
