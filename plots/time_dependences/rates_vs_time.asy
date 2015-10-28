@@ -8,10 +8,10 @@ TH2_palette = Gradient(blue, heavygreen, yellow, red);
 
 int rebin = 50;
 
-string datasets[] = { "DS2a", "DS2b"};
+string datasets[] = { "DS1" };
 
 string dgns[] = { "45b_56t", "45t_56b" };
-string dgn_labs[] = { "far dgn", "close dgn" };
+string dgn_labs[] = { "45 bot -- 56 top", "45 top -- 56 bot" };
 
 xSizeDef = 12cm;
 xTicksDef = LeftTicks(Step=1, step=0.5);
