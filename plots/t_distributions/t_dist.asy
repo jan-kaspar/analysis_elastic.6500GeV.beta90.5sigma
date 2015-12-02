@@ -8,6 +8,9 @@ string datasets[] = { "DS1" };
 string diagonals[] = { "45b_56t", "45t_56b" };
 string diagLabels[] = { "45 bot -- 56 top", "45 top -- 56 bot" };
 
+drawGridDef = true;
+
+xTicksDef = LeftTicks(0.05, 0.01);
 
 for (int dsi : datasets.keys)
 {
@@ -21,6 +24,7 @@ for (int dsi : datasets.keys)
 			"d0,eb", p, diagLabels[dgni]);
 	}
 
-	limits((0, 1e1), (0.8, 1e7), Crop);
+	limits((0, 7e4), (0.2, 1e7), Crop);
+	//limits((0, 1e1), (0.8, 1e7), Crop);
 	AttachLegend(datasets[dsi]);
 }

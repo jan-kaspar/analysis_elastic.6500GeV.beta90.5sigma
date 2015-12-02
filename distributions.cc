@@ -754,7 +754,7 @@ int main(int argc, char **argv)
 
 	unsigned int N_anal=0, N_anal_zeroBias=0;
 	unsigned int N_zeroBias_el=0, N_zeroBias_el_RP_trig=0;
-	unsigned int N_4outof4=0, N_el=0;
+	unsigned int N_4outof4=0, N_el=0, N_el_RP_trig=0;
 	unsigned int N_el_T2trig=0, N_4outof4_T2trig=0;
 	unsigned int N_el_raw=0;
 
@@ -951,6 +951,9 @@ int main(int argc, char **argv)
 		g_selected_bunch_num_vs_timestamp->SetPoint(g_selected_bunch_num_vs_timestamp->GetN(), ev.timestamp, ev.bunch_num);
 
 		N_el++;
+
+		if ((ev.trigger_bits & 3) != 0)
+			N_el_RP_trig++;
 
 		// fill zero-bias plots
 		if (zero_bias_event)
@@ -1433,6 +1436,7 @@ int main(int argc, char **argv)
 
 	printf("N_4outof4 = %u\n", N_4outof4);
 	printf("N_el = %u\n", N_el);
+	printf("N_el_RP_trig = %u\n", N_el_RP_trig);
 	printf("N_el_T2trig = %u\n", N_el_T2trig);
 	printf("N_4outof4_T2trig = %u\n", N_4outof4_T2trig);
 
