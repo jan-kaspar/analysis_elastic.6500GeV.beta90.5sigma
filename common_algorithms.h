@@ -16,29 +16,29 @@ Kinematics DoReconstruction(const HitData &h, const Environment & env)
 	// th_y: from hit positions
 	// vtx_x: linear regression
 
-	double D_x_L = - env.v_x_L_2_N * env.L_x_L_2_F + env.v_x_L_2_F * env.L_x_L_2_N;
-	k.th_x_L = (env.v_x_L_2_N * h.L_2_F.x - env.v_x_L_2_F * h.L_2_N.x) / D_x_L;
-	k.vtx_x_L = (- h.L_2_N.x * env.L_x_L_2_F + h.L_2_F.x * env.L_x_L_2_N) / D_x_L;
+	double D_x_L = - env.v_x_L_1_F * env.L_x_L_2_F + env.v_x_L_2_F * env.L_x_L_1_F;
+	k.th_x_L = (env.v_x_L_1_F * h.L_2_F.x - env.v_x_L_2_F * h.L_1_F.x) / D_x_L;
+	k.vtx_x_L = (- h.L_1_F.x * env.L_x_L_2_F + h.L_2_F.x * env.L_x_L_1_F) / D_x_L;
 
-	double D_x_R = + env.v_x_R_2_N * env.L_x_R_2_F - env.v_x_R_2_F * env.L_x_R_2_N;
-	k.th_x_R = (env.v_x_R_2_N * h.R_2_F.x - env.v_x_R_2_F * h.R_2_N.x) / D_x_R;
-	k.vtx_x_R = (+ h.R_2_N.x * env.L_x_R_2_F - h.R_2_F.x * env.L_x_R_2_N) / D_x_R;
+	double D_x_R = + env.v_x_R_1_F * env.L_x_R_2_F - env.v_x_R_2_F * env.L_x_R_1_F;
+	k.th_x_R = (env.v_x_R_1_F * h.R_2_F.x - env.v_x_R_2_F * h.R_1_F.x) / D_x_R;
+	k.vtx_x_R = (+ h.R_1_F.x * env.L_x_R_2_F - h.R_2_F.x * env.L_x_R_1_F) / D_x_R;
 	
-	double th_y_L_2_N = - h.L_2_N.y / env.L_y_L_2_N;
+	double th_y_L_1_F = - h.L_1_F.y / env.L_y_L_1_F;
   	double th_y_L_2_F = - h.L_2_F.y / env.L_y_L_2_F;
-  	k.th_y_L = (th_y_L_2_N + th_y_L_2_F) / 2.;
+  	k.th_y_L = (th_y_L_1_F + th_y_L_2_F) / 2.;
   	
-	double th_y_R_2_N = + h.R_2_N.y / env.L_y_R_2_N;
+	double th_y_R_1_F = + h.R_1_F.y / env.L_y_R_1_F;
   	double th_y_R_2_F = + h.R_2_F.y / env.L_y_R_2_F;
-  	k.th_y_R = (th_y_R_2_N + th_y_R_2_F) / 2.;
+  	k.th_y_R = (th_y_R_1_F + th_y_R_2_F) / 2.;
 	
-	double D_y_L = - env.v_y_L_2_N * env.L_y_L_2_F + env.v_y_L_2_F * env.L_y_L_2_N;
-	//k.th_y_L = (env.v_y_L_2_N * h.L_2_F.y - env.v_y_L_2_F * h.L_2_N.y) / D_y_L;
-	k.vtx_y_L = (- h.L_2_N.y * env.L_y_L_2_F + h.L_2_F.y * env.L_y_L_2_N) / D_y_L;
+	double D_y_L = - env.v_y_L_1_F * env.L_y_L_2_F + env.v_y_L_2_F * env.L_y_L_1_F;
+	//k.th_y_L = (env.v_y_L_1_F * h.L_2_F.y - env.v_y_L_2_F * h.L_1_F.y) / D_y_L;
+	k.vtx_y_L = (- h.L_1_F.y * env.L_y_L_2_F + h.L_2_F.y * env.L_y_L_1_F) / D_y_L;
 
-	double D_y_R = + env.v_y_R_2_N * env.L_y_R_2_F - env.v_y_R_2_F * env.L_y_R_2_N;
-	//k.th_y_R = (env.v_y_R_2_N * h.R_2_F.y - env.v_y_R_2_F * h.R_2_N.y) / D_y_R;
-	k.vtx_y_R = (+ h.R_2_N.y * env.L_y_R_2_F - h.R_2_F.y * env.L_y_R_2_N) / D_y_R;
+	double D_y_R = + env.v_y_R_1_F * env.L_y_R_2_F - env.v_y_R_2_F * env.L_y_R_1_F;
+	//k.th_y_R = (env.v_y_R_1_F * h.R_2_F.y - env.v_y_R_2_F * h.R_1_F.y) / D_y_R;
+	k.vtx_y_R = (+ h.R_1_F.y * env.L_y_R_2_F - h.R_2_F.y * env.L_y_R_1_F) / D_y_R;
 
 	// double-arm kinematics reconstruction
 	// th_x: from hit positions, L-R average
