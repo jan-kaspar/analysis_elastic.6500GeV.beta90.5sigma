@@ -29,8 +29,9 @@ for (int ui : units.keys)
 	draw(rGetObj(topDir+dataset+"/alignment.root", period + "/unit "+units[ui]+"/horizontal/horizontal profile/p"), "d0,eb", blue);
 	draw(rGetObj(topDir+dataset+"/alignment.root", period + "/unit "+units[ui]+"/horizontal/horizontal profile/p|ff"), "l", red+1pt);
 	
-	limits((-30, -0.3), (+30, +0.3), Crop);
-	AttachLegend(unit_labels[ui], NE, NE);
+
+	//limits((time_min, -10), (time_max, +10), Crop);
+	AttachLegend(unit_labels[ui], SE, SE);
 }
 
 //----------------------------------------------------------------------------------------------------
@@ -45,7 +46,7 @@ for (int ui : units.keys)
 	draw(rGetObj(topDir+dataset+"/alignment.root", period + "/unit "+units[ui]+"/vertical/y_hist|y_hist_range"), "d0,vl", red);
 
 	limits((-30, 1), (+30, 2e2), Crop);
-	AttachLegend(unit_labels[ui], NE, NE);
+	AttachLegend(unit_labels[ui], SE, SE);
 }
 
 
@@ -58,6 +59,6 @@ for (int ui : units.keys)
 
 	draw(rGetObj(topDir+dataset+"/alignment.root", period + "/unit "+units[ui]+"/vertical/g_max_diff"), "l,p", heavygreen, mCi+1pt+heavygreen);
 
-	limits((-2.5, 0), (+2.5, 1), Crop);
-	AttachLegend(unit_labels[ui], NE, NE);
+	limits((-2, 0), (+2, 1), Crop);
+	AttachLegend(unit_labels[ui], SE, SE);
 }

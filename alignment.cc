@@ -213,7 +213,7 @@ void DoHorizontalGraphFit(TGraph *g_t, TGraph *g_b,
 	printf("\ta = %.2f +- %.2f mrad\n", a*1E3, ae*1E3);
 	printf("\tb = %.1f +- %.1f um\n", b*1E3, be*1E3);
 
-	if (false)
+	if (true)
 	{
 		TCanvas *c = new TCanvas();
 		c->SetName("horizontal fit");
@@ -283,8 +283,7 @@ void DoVerticalAlignment(TGraph *g_t, TGraph *gw_t, TGraph *g_b, TGraph *gw_b,
 {
 	printf(">> DoVerticalAlignment\n");
 
-	// rely on user cuts
-	double bs_y_cut = 0.;	// 3 * si_th_y * L_y_F = 3 * 1.9E-6 * 270m = 1.5 mm
+	double bs_y_cut = 1.2;	// 3 * si_th_y * L_y_F = 3 * 1.9E-6 * 270m = 1.5 mm
 	printf("\tbs_y_cut = %.3f mm\n", bs_y_cut);
 
 	// prepare samples, determine ranges 
@@ -376,7 +375,7 @@ void DoVerticalAlignment(TGraph *g_t, TGraph *gw_t, TGraph *g_b, TGraph *gw_b,
 	// determine shift range
 	double de_w = (y_max_t - y_min_t) - (y_max_b - y_min_b);
 	double s_min = min(0., de_w), s_max = max(0., de_w);
-	s_min = -2.5; s_max = +2.5;
+	s_min = -2.; s_max = +2.;
 	double s_step = 0.05;
 	printf("\tshift range: %.2E to %.2E, shift step = %.2E\n", s_min, s_max, s_step);
 

@@ -155,6 +155,7 @@ int main(int argc, char **argv)
 		ev.h.R_2_N.v = rp_R_2_N->valid; ev.h.R_2_N.x = rp_R_2_N->x; ev.h.R_2_N.y = rp_R_2_N->y;
 		ev.h.R_2_F.v = rp_R_2_F->valid; ev.h.R_2_F.x = rp_R_2_F->x; ev.h.R_2_F.y = rp_R_2_F->y;
 
+		/*
 		unsigned N_L = 0;
 		if (ev.h.L_1_F.v) N_L++;
 		if (ev.h.L_2_N.v) N_L++;
@@ -164,8 +165,9 @@ int main(int argc, char **argv)
 		if (ev.h.R_1_F.v) N_R++;
 		if (ev.h.R_2_N.v) N_R++;
 		if (ev.h.R_2_F.v) N_R++;
+		*/
 
-		bool save = (N_L >= 2 && N_R >= 2);
+		bool save = (ev.h.L_2_N.v && ev.h.L_2_F.v && ev.h.R_2_N.v && ev.h.R_2_F.v);
 		if (!save)
 			continue;
 

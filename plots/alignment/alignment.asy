@@ -19,14 +19,18 @@ drawGridDef = true;
 
 TGraph_errorBar = None;
 
+real time_min = 4.0;
+real time_max = 7.5;
+
+
 //----------------------------------------------------------------------------------------------------
 NewRow();
 
 for (int ui : units.keys)
 {
 	NewPad("time $\ung{h}$", "tilt $\ung{mrad}$", axesAbove=false);
-	currentpad.yTicks = RightTicks(1., 0.2);
-	DrawRunBands(-4, +4);
+	currentpad.yTicks = RightTicks(2., 1.);
+	DrawRunBands(-10, +10);
 
 	for (int di : datasets.keys)
 	{
@@ -38,7 +42,7 @@ for (int ui : units.keys)
 	
 	//draw(swToHours, rGetObj("../overall_alignment/alignment_fit.root", ""+units[ui]+"/a_fit"), "l", red+1.5pt);
 
-	limits((time_min, -4), (time_max, +4), Crop);
+	limits((time_min, -10), (time_max, +10), Crop);
 	AttachLegend(unit_labels[ui], SE, SE);
 }
 
@@ -48,8 +52,8 @@ NewRow();
 for (int ui : units.keys)
 {
 	NewPad("time $\ung{h}$", "horizontal position $\ung{\mu m}$", axesAbove=false);
-	currentpad.yTicks = RightTicks(20., 10.);
-	DrawRunBands(-100, +100);
+	currentpad.yTicks = RightTicks(200., 100.);
+	DrawRunBands(-800, +800);
 
 	/*
 	TGraph_reducePoints = 30;
@@ -69,7 +73,7 @@ for (int ui : units.keys)
 	//draw(shift(0,   0)*swToHours, rGetObj("../overall_alignment/alignment_fit.root", ""+units[ui]+"/b_fit"), "l", red+1.5pt);
 	//draw(shift(0, -50)*swToHours, rGetObj("../overall_alignment/alignment_fit.root", ""+units[ui]+"/b_fit"), "l", red+dashed);
 
-	limits((time_min, -100), (time_max, +100), Crop);
+	limits((time_min, -800), (time_max, +800), Crop);
 	AttachLegend(unit_labels[ui], SE, SE);
 }
 
@@ -79,8 +83,8 @@ NewRow();
 for (int ui : units.keys)
 {
 	NewPad("time $\ung{h}$", "vertical position $\ung{\mu m}$", axesAbove=false);
-	currentpad.yTicks = RightTicks(100., 20.);
-	DrawRunBands(-500, +500);
+	currentpad.yTicks = RightTicks(500., 100.);
+	DrawRunBands(-1500, +1500);
 
 	/*
 	TGraph_reducePoints = 30;
@@ -105,7 +109,7 @@ for (int ui : units.keys)
 	draw(swToHours*shift(0, -100), rGetObj("../overall_alignment/alignment_fit.root", ""+units[ui]+"/c_fit"), "l", red+dashed);
 	*/
 
-	limits((time_min, -500), (time_max, +500), Crop);
+	limits((time_min, -1500), (time_max, +1500), Crop);
 	AttachLegend(unit_labels[ui], SE, SE);
 }
 

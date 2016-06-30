@@ -21,19 +21,20 @@ void Init_base()
 	//bunchMap[94882].push_back(0);
 
 	// alignment settings
-	/*
 	AlignmentSource alSrc;
-	alSrc.SetAlignmentA(atNone);
-	alSrc.SetAlignmentB(atNone);
-	alSrc.SetAlignmentC(atNone);
+	alSrc.SetAlignmentA(atConstant);
+	alSrc.SetAlignmentB(atConstant);
+	alSrc.SetAlignmentC(atConstant);
 
-	alSrc.cnst.a_L_F = 0E-3; alSrc.cnst.b_L_F = 0E-3; alSrc.cnst.c_L_F = 0E-3;
-	alSrc.cnst.a_L_N = 0E-3; alSrc.cnst.b_L_N = 0E-3; alSrc.cnst.c_L_N = 0E-3;
-	alSrc.cnst.a_R_N = 0E-3; alSrc.cnst.b_R_N = 0E-3; alSrc.cnst.c_R_N = 0E-3;
-	alSrc.cnst.a_R_F = 0E-3; alSrc.cnst.b_R_F = 0E-3; alSrc.cnst.c_R_F = 0E-3;
+	alSrc.cnst.a_L_2_F = -0.7E-3; alSrc.cnst.b_L_2_F = -57E-3; alSrc.cnst.c_L_2_F = 58E-3;
+	alSrc.cnst.a_L_2_N = -2.0E-3; alSrc.cnst.b_L_2_N = 381E-3; alSrc.cnst.c_L_2_N = -79E-3;
+	alSrc.cnst.a_L_1_F = -2.4E-3; alSrc.cnst.b_L_1_F = 514E-3; alSrc.cnst.c_L_1_F = -95E-3;
+                                                                          
+	alSrc.cnst.a_R_1_F =  6.4E-3; alSrc.cnst.b_R_1_F = -574E-3; alSrc.cnst.c_R_1_F = -999E-3;
+	alSrc.cnst.a_R_2_N =  4.5E-3; alSrc.cnst.b_R_2_N = -299E-3; alSrc.cnst.c_R_2_N = -856E-3;
+	alSrc.cnst.a_R_2_F = -1.2E-3; alSrc.cnst.b_R_2_F =  608E-3; alSrc.cnst.c_R_2_F = -387E-3;
 	
 	alignmentSources.push_back(alSrc);
-	*/
 
 	// environment settings
 	env.InitNominal();
@@ -86,13 +87,14 @@ void Init_base()
 	anal.alignment_t0 = 16000.;		// beginning of the first time-slice
 	anal.alignment_ts = 10.*60.;	// time-slice in s
 	
-	anal.alignmentYRanges["L_2_F"] = Analysis::AlignmentYRange(-20.0, -6.5, 5.0, 20.0);
-	anal.alignmentYRanges["L_2_N"] = Analysis::AlignmentYRange(-19.0, -5.9, 4.5, 18.0);
-	anal.alignmentYRanges["L_1_F"] = Analysis::AlignmentYRange(-19.0, -5.6, 4.5, 18.0);
+	// TODO
+	anal.alignmentYRanges["L_2_F"] = Analysis::AlignmentYRange(-30., -4.0, 3.8, 30.);
+	anal.alignmentYRanges["L_2_N"] = Analysis::AlignmentYRange(-30., -4.0, 3.3, 30.);
+	anal.alignmentYRanges["L_1_F"] = Analysis::AlignmentYRange(-30., -4.0, 3.1, 30.);
 
-	anal.alignmentYRanges["R_1_F"] = Analysis::AlignmentYRange(-19.5, -5.4, 4.0, 19.0);
-	anal.alignmentYRanges["R_2_N"] = Analysis::AlignmentYRange(-19.5, -5.6, 4.6, 19.0);
-	anal.alignmentYRanges["R_2_F"] = Analysis::AlignmentYRange(-20.0, -5.3, 5.5, 20.0);
+	anal.alignmentYRanges["R_1_F"] = Analysis::AlignmentYRange(-30., -4.1, 3.7, 30.);
+	anal.alignmentYRanges["R_2_N"] = Analysis::AlignmentYRange(-30., -4.1, 4.0, 30.);
+	anal.alignmentYRanges["R_2_F"] = Analysis::AlignmentYRange(-30., -4.1, 5.0, 30.);
 
 #if 0
 	// TODO
@@ -125,10 +127,10 @@ void Init_45b_56t()
 #endif
 
 	// analysis settings
-	anal.cut1_a = 1.; anal.cut1_c = -176.3E-6; anal.cut1_si = 11.5E-6;
-	anal.cut2_a = 1.; anal.cut2_c = -2.7E-6; anal.cut2_si = 2.7E-6;
+	anal.cut1_a = 1.; anal.cut1_c = -1.0E-6; anal.cut1_si = 11.5E-6;
+	anal.cut2_a = 1.; anal.cut2_c = -0.2E-6; anal.cut2_si = 2.7E-6;
 
-	anal.cut7_a = 126.; anal.cut7_c = +0.321; anal.cut7_si = 0.011;
+	anal.cut7_a = 109.; anal.cut7_c = +0.; anal.cut7_si = 0.011;
 
 #if 0
 	anal.th_y_lcut_L = 145E-6; anal.th_y_lcut_R = 163E-6;
@@ -163,10 +165,10 @@ void Init_45t_56b()
 #endif
 
 	// analysis settings
-	anal.cut1_a = 1.; anal.cut1_c = -211E-6; anal.cut1_si = 12.0E-6;
-	anal.cut2_a = 1.; anal.cut2_c = -2.7E-6; anal.cut2_si = 2.7E-6;
+	anal.cut1_a = 1.; anal.cut1_c = 1.6E-6; anal.cut1_si = 12.0E-6;
+	anal.cut2_a = 1.; anal.cut2_c = -0.2E-6; anal.cut2_si = 2.7E-6;
 
-	anal.cut7_a = 137.; anal.cut7_c = 0.330; anal.cut7_si = 0.011;
+	anal.cut7_a = 109.; anal.cut7_c = 0.; anal.cut7_si = 0.011;
 
 #if 0
 	anal.th_y_lcut_L = 170E-6; anal.th_y_lcut_R = 173E-6;

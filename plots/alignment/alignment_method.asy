@@ -6,7 +6,7 @@ string topDir = "../../";
 string dataset = "DS1";
 string period = "0";
 int period_idx = 0; // period index in global graph
-string unit = "R_2_F";
+string unit = "R_1_F";
 
 string f = topDir + dataset + "/alignment.root";
 string dir = "period "+period+"/unit "+unit;
@@ -14,7 +14,7 @@ string dir = "period "+period+"/unit "+unit;
 transform xyswitch = (0, 0, 0, 1, 1, 0);
 
 //TGraph_reducePoints = 10;
-TGraph_N_limit = 1000;
+//TGraph_N_limit = 10000;
 
 //----------------------------------------------------------------------------------------------------
 
@@ -34,7 +34,7 @@ real GetYResult()
 //----------------------------------------------------------------------------------------------------
 
 NewPad(false);
-label("{\SetFontSizesXX hit distribution}");
+label("{\SetFontSizesXX elastic hits}");
 
 NewPad(false);
 
@@ -49,17 +49,17 @@ NewPad("$x\ung{mm}$", "$y\ung{mm}$");
 draw(rGetObj(topDir+dataset+"/distributions_45b_56t.root", "alignment/"+period+"/g_y_"+unit+"_vs_x_"+unit+"_sel"), "p");
 draw(rGetObj(topDir+dataset+"/distributions_45t_56b.root", "alignment/"+period+"/g_y_"+unit+"_vs_x_"+unit+"_sel"), "p");
 
-limits((-3, -15), (+3, +15), Crop);
+limits((-3, -20), (+3, +20), Crop);
 
 NewPad(false, autoSize=false);
 draw((0, 0)--(50, 0), EndArrow);
 
 
 NewPad("number of entries", "$y\ung{mm}$");
-draw(xyswitch, rGetObj(f, dir+"/vertical/y_hist"), "vl", black);
+draw(xyswitch, rGetObj(f, dir+"/vertical/y_hist|y_hist"), "vl", black);
 real y_beam = GetYResult();
 draw((0, y_beam)--(400, y_beam), blue+1pt);
-limits((0, -15), (60, +15), Crop);
+limits((0, -20), (100, +20), Crop);
 
 //--------------------
 NewRow();
@@ -92,7 +92,7 @@ draw(rGetObj(topDir+dataset+"/distributions_45b_56t.root", "alignment/"+period+"
 draw(rGetObj(topDir+dataset+"/distributions_45t_56b.root", "alignment/"+period+"/g_y_"+unit+"_vs_x_"+unit+"_sel"), "p");
 //draw(xyswitch, rGetObj(f, dir+"/horizontal/horizontal profile/p"), "d0,eb", red+1pt);
 draw(xyswitch, rGetObj(f, dir+"/horizontal/horizontal graph fit/horizontal fit|ff"), "l", red+1pt);
-limits((-3, -15), (+3, +15), Crop);
+limits((-3, -20), (+3, +20), Crop);
 
 NewPad(false, autoSize=false);
 draw((0, 0)--(50, 0), EndArrow);
@@ -100,6 +100,6 @@ draw((0, 0)--(50, 0), EndArrow);
 NewPad("$x\ung{mm}$", "$y\ung{mm}$");
 draw(xyswitch, rGetObj(f, dir+"/horizontal/horizontal graph fit/horizontal fit|ff"), "l", red+1pt);
 draw((-10, y_beam)--(+10, y_beam), blue+1pt);
-limits((-3, -15), (+3, +15), Crop);
+limits((-3, -20), (+3, +20), Crop);
 
 GShipout(hSkip=2mm, vSkip=0mm);

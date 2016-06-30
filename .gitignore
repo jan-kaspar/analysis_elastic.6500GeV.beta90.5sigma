@@ -3,9 +3,13 @@
 .*
 *.log_*
 *.root
+*.out
 
 *.ods
 *.tfs
 
 alignment/print_fit
 alignment/test_linearity
+alignment/fit_old_first_re_reconstruction
+
+optics

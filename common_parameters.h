@@ -8,9 +8,9 @@ void Environment::InitNominal()
 	si_de_p = 1E-3 * p;
 
 	// angular (one-side) beam smearing (rad)
-	// TODO: update/tune
-	si_th_x_L = si_th_x_R = 1.7E-6;
-	si_th_y_L = si_th_y_R = 1.7E-6;
+	// TODO: update
+	si_th_x_L = si_th_x_R = 0.88E-6;
+	si_th_y_L = si_th_y_R = 0.95E-6 / sqrt(2.);
 
 	// vertex smearing (mm)
 	// TODO: update

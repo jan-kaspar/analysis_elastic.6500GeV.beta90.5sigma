@@ -5,11 +5,13 @@ string topDir = "../../";
 
 TH2_palette = Gradient(blue, heavygreen, yellow, red);
 
-string datasets[] = { "DS2" };
-string dgns[] = { "45b_56t", "45t_56b" };
+string datasets[] = { "DS1" };
+
+//string dgns[] = { "45b_56t", "45t_56b" };
+string dgns[] = { "45b_56t" };
 
 //int cuts[] = { 1, 2, 3, 4, 5, 6, 7, 8 };
-int cuts[] = { 7 };
+int cuts[] = { 1, 2, 7 };
 
 real scale_x[] = { 1e6, 1e6, 1e6, 1e6, 1e0, 1e0, 1e6, 1e6 };
 real scale_y[] = { 1e6, 1e6, 1e0, 1e0, 1e0, 1e0, 1e0, 1e0 };
@@ -59,6 +61,7 @@ for (int ci : cuts.keys)
 			draw(scale(scale_x[idx], scale_y[idx]), rGetObj(f, objC+"#2"));
 			limits((-lim_x_high[idx], -lim_y_high[idx]), (-lim_x_low[idx], -lim_y_low[idx]), Crop);
 			
+			/*
 			NewPad(label_x[idx], label_y[idx]);
 			scale(Linear, Linear, Log);
 			string objC = format("elastic cuts/cut %i", cut) + format("/plot_after_cq%i", cut);
@@ -72,6 +75,7 @@ for (int ci : cuts.keys)
 			draw(scale(scale_y[idx], 1.), rGetObj(f, objH+""), "vl,eb,lR");
 			//draw(scale(scale_x[idx], scale_y[idx]), rGetObj(f, objH+"|gaus"));
 			AttachLegend();
+			*/
 		}
 	}
 

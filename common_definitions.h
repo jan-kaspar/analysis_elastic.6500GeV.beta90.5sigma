@@ -31,19 +31,26 @@ struct AlignmentData
 	//	a: xy coupling in rad
 	//	b: x shift in mm
 	//	c: y shift in mm
-	double a_L_F, b_L_F, c_L_F;
-	double a_L_N, b_L_N, c_L_N;
-	double a_R_N, b_R_N, c_R_N;
-	double a_R_F, b_R_F, c_R_F;
+	double a_L_2_F, b_L_2_F, c_L_2_F;
+	double a_L_2_N, b_L_2_N, c_L_2_N;
+	double a_L_1_F, b_L_1_F, c_L_1_F;
+                                  
+	double a_R_1_F, b_R_1_F, c_R_1_F;
+	double a_R_2_N, b_R_2_N, c_R_2_N;
+	double a_R_2_F, b_R_2_F, c_R_2_F;
 
 	AlignmentData()
 	{
-		a_L_F = b_L_F = c_L_F = 0.;
-		a_L_N = b_L_N = c_L_N = 0.;
-		a_R_N = b_R_N = c_R_N = 0.;
-		a_R_F = b_R_F = c_R_F = 0.;
+		a_L_2_F = b_L_2_F = c_L_2_F = 0.;
+		a_L_2_N = b_L_2_N = c_L_2_N = 0.;
+		a_L_1_F = b_L_1_F = c_L_1_F = 0.;
+                                 
+		a_R_1_F = b_R_1_F = c_R_1_F = 0.;
+		a_R_2_N = b_R_2_N = c_R_2_N = 0.;
+		a_R_2_F = b_R_2_F = c_R_2_F = 0.;
 	}
 
+	/*
 	AlignmentData Interpolate(double s_N, double s_F, double s_NH, double s_FH) const
 	{
 		AlignmentData r;
@@ -59,6 +66,7 @@ struct AlignmentData
 
 		return r;
 	}
+	*/
 };
 
 //----------------------------------------------------------------------------------------------------
@@ -67,9 +75,12 @@ enum AlignmentType { atNone, atConstant, atTimeDependent };
 
 struct AlignmentSource
 {
-	struct GraphSet {
-		TGraph *L_F, *L_N, *R_N, *R_F;
-		GraphSet() : L_F(NULL), L_N(NULL), R_N(NULL), R_F(NULL) {}
+	struct GraphSet
+	{
+		TGraph *L_2_F, *L_2_N, *L_1_F, *R_1_F, *R_2_N, *R_2_F;
+		GraphSet() : L_2_F(NULL), L_2_N(NULL), L_1_F(NULL), R_1_F(NULL), R_2_N(NULL), R_2_F(NULL)
+		{
+		}
 	} gs_a, gs_b, gs_c;
 
 	AlignmentData cnst;
@@ -114,23 +125,30 @@ struct AlignmentSource
 				return;
 			}
 			
-			TGraph *g_L_F = (TGraph *) alF->Get(( string("L_F/") + obj).c_str() );
-			TGraph *g_L_N = (TGraph *) alF->Get(( string("L_N/") + obj).c_str() );
-			TGraph *g_R_N = (TGraph *) alF->Get(( string("R_N/") + obj).c_str() );
-			TGraph *g_R_F = (TGraph *) alF->Get(( string("R_F/") + obj).c_str() );
+			TGraph *g_L_2_F = (TGraph *) alF->Get(( string("L_2_F/") + obj).c_str() );
+			TGraph *g_L_2_N = (TGraph *) alF->Get(( string("L_2_N/") + obj).c_str() );
+			TGraph *g_L_1_F = (TGraph *) alF->Get(( string("L_1_F/") + obj).c_str() );
+                                                               
+			TGraph *g_R_1_F = (TGraph *) alF->Get(( string("R_1_F/") + obj).c_str() );
+			TGraph *g_R_2_N = (TGraph *) alF->Get(( string("R_2_N/") + obj).c_str() );
+			TGraph *g_R_2_F = (TGraph *) alF->Get(( string("R_2_F/") + obj).c_str() );
 
-			if (g_L_F && g_L_N && g_R_N && g_R_F)
+			if (g_L_2_F && g_L_2_N && g_L_1_F && g_R_1_F && g_R_2_N && g_R_2_F)
+			{
 				printf("\talignment graphs successfully loaded\n");
-			else {
+			} else {
 				printf("\tERROR: unable to load some alignment graphs\n");
 				delete alF;
 				return;
 			}
 
-			gs.L_F = new TGraph(*g_L_F);
-			gs.L_N = new TGraph(*g_L_N);
-			gs.R_N = new TGraph(*g_R_N);
-			gs.R_F = new TGraph(*g_R_F);
+			gs.L_2_F = new TGraph(*g_L_2_F);
+			gs.L_2_N = new TGraph(*g_L_2_N);
+			gs.L_1_F = new TGraph(*g_L_1_F);
+                                        
+			gs.R_1_F = new TGraph(*g_R_1_F);
+			gs.R_2_N = new TGraph(*g_R_2_N);
+			gs.R_2_F = new TGraph(*g_R_2_F);
 
 			delete alF;
 		}
@@ -148,34 +166,106 @@ struct AlignmentSource
 	{
 		AlignmentData d;
 
-		if (type_a == atNone) {
-			d.a_L_F = 0.; d.a_L_N = 0.; d.a_R_N = 0.; d.a_R_F = 0.;
-		}
-		if (type_a == atConstant) {
-			d.a_L_F = cnst.a_L_F; d.a_L_N = cnst.a_L_N; d.a_R_N = cnst.a_R_N; d.a_R_F = cnst.a_R_F;
-		}
-		if (type_a == atTimeDependent) {
-			d.a_L_F = gs_a.L_F->Eval(timestamp)*1E-3; d.a_L_N = gs_a.L_N->Eval(timestamp)*1E-3; d.a_R_N = gs_a.R_N->Eval(timestamp)*1E-3; d.a_R_F = gs_a.R_F->Eval(timestamp)*1E-3;
+		// a
+		if (type_a == atNone)
+		{
+			d.a_L_2_F = 0.;
+			d.a_L_2_N = 0.;
+			d.a_L_1_F = 0.;
+			
+			d.a_R_1_F = 0.;
+			d.a_R_2_N = 0.;
+			d.a_R_2_F = 0.;
 		}
 
-		if (type_b == atNone) {
-			d.b_L_F = 0.; d.b_L_N = 0.; d.b_R_N = 0.; d.b_R_F = 0.;
+		if (type_a == atConstant)
+		{
+			d.a_L_2_F = cnst.a_L_2_F;
+			d.a_L_2_N = cnst.a_L_2_N;
+			d.a_L_1_F = cnst.a_L_1_F;
+			                      
+			d.a_R_1_F = cnst.a_R_1_F;
+			d.a_R_2_N = cnst.a_R_2_N;
+			d.a_R_2_F = cnst.a_R_2_F;
 		}
-		if (type_b == atConstant) {
-			d.b_L_F = cnst.b_L_F; d.b_L_N = cnst.b_L_N; d.b_R_N = cnst.b_R_N; d.b_R_F = cnst.b_R_F;
+
+		if (type_a == atTimeDependent)
+		{
+			d.a_L_2_F = gs_a.L_2_F->Eval(timestamp)*1E-3;
+			d.a_L_2_N = gs_a.L_2_N->Eval(timestamp)*1E-3;
+			d.a_L_1_F = gs_a.L_1_F->Eval(timestamp)*1E-3;
+                                
+			d.a_R_1_F = gs_a.R_1_F->Eval(timestamp)*1E-3;
+			d.a_R_2_N = gs_a.R_2_N->Eval(timestamp)*1E-3;
+			d.a_R_2_F = gs_a.R_2_F->Eval(timestamp)*1E-3;
 		}
-		if (type_b == atTimeDependent) {
-			d.b_L_F = gs_b.L_F->Eval(timestamp)*1E-3; d.b_L_N = gs_b.L_N->Eval(timestamp)*1E-3; d.b_R_N = gs_b.R_N->Eval(timestamp)*1E-3; d.b_R_F = gs_b.R_F->Eval(timestamp)*1E-3;
+
+		// b
+		if (type_b == atNone)
+		{
+			d.b_L_2_F = 0.;
+			d.b_L_2_N = 0.;
+			d.b_L_1_F = 0.;
+			
+			d.b_R_1_F = 0.;
+			d.b_R_2_N = 0.;
+			d.b_R_2_F = 0.;
 		}
-		
-		if (type_c == atNone) {
-			d.c_L_F = 0.; d.c_L_N = 0.; d.c_R_N = 0.; d.c_R_F = 0.;
+
+		if (type_b == atConstant)
+		{
+			d.b_L_2_F = cnst.b_L_2_F;
+			d.b_L_2_N = cnst.b_L_2_N;
+			d.b_L_1_F = cnst.b_L_1_F;
+			                      
+			d.b_R_1_F = cnst.b_R_1_F;
+			d.b_R_2_N = cnst.b_R_2_N;
+			d.b_R_2_F = cnst.b_R_2_F;
 		}
-		if (type_c == atConstant) {
-			d.c_L_F = cnst.c_L_F; d.c_L_N = cnst.c_L_N; d.c_R_N = cnst.c_R_N; d.c_R_F = cnst.c_R_F;
+
+		if (type_b == atTimeDependent)
+		{
+			d.b_L_2_F = gs_b.L_2_F->Eval(timestamp)*1E-3;
+			d.b_L_2_N = gs_b.L_2_N->Eval(timestamp)*1E-3;
+			d.b_L_1_F = gs_b.L_1_F->Eval(timestamp)*1E-3;
+                                
+			d.b_R_1_F = gs_b.R_1_F->Eval(timestamp)*1E-3;
+			d.b_R_2_N = gs_b.R_2_N->Eval(timestamp)*1E-3;
+			d.b_R_2_F = gs_b.R_2_F->Eval(timestamp)*1E-3;
 		}
-		if (type_c == atTimeDependent) {
-			d.c_L_F = gs_c.L_F->Eval(timestamp)*1E-3; d.c_L_N = gs_c.L_N->Eval(timestamp)*1E-3; d.c_R_N = gs_c.R_N->Eval(timestamp)*1E-3; d.c_R_F = gs_c.R_F->Eval(timestamp)*1E-3;
+
+		// c
+		if (type_c == atNone)
+		{
+			d.c_L_2_F = 0.;
+			d.c_L_2_N = 0.;
+			d.c_L_1_F = 0.;
+			
+			d.c_R_1_F = 0.;
+			d.c_R_2_N = 0.;
+			d.c_R_2_F = 0.;
+		}
+
+		if (type_c == atConstant)
+		{
+			d.c_L_2_F = cnst.c_L_2_F;
+			d.c_L_2_N = cnst.c_L_2_N;
+			d.c_L_1_F = cnst.c_L_1_F;
+			                      
+			d.c_R_1_F = cnst.c_R_1_F;
+			d.c_R_2_N = cnst.c_R_2_N;
+			d.c_R_2_F = cnst.c_R_2_F;
+		}
+
+		if (type_c == atTimeDependent)
+		{
+			d.c_L_2_F = gs_c.L_2_F->Eval(timestamp)*1E-3;
+			d.c_L_2_N = gs_c.L_2_N->Eval(timestamp)*1E-3;
+			d.c_L_1_F = gs_c.L_1_F->Eval(timestamp)*1E-3;
+                                
+			d.c_R_1_F = gs_c.R_1_F->Eval(timestamp)*1E-3;
+			d.c_R_2_N = gs_c.R_2_N->Eval(timestamp)*1E-3;
+			d.c_R_2_F = gs_c.R_2_F->Eval(timestamp)*1E-3;
 		}
 
 		return d;
@@ -220,19 +310,20 @@ struct HitData
 		R_2_F += add.R_2_F;
 	}
 
-/*
 	HitData ApplyAlignment(const AlignmentData &al) const
 	{
 		HitData r;
 
-		r.x_L_F = x_L_F - al.a_L_F * y_L_F - al.b_L_F; r.y_L_F = y_L_F - al.c_L_F;
-		r.x_L_N = x_L_N - al.a_L_N * y_L_N - al.b_L_N; r.y_L_N = y_L_N - al.c_L_N;
-		r.x_R_N = x_R_N - al.a_R_N * y_R_N - al.b_R_N; r.y_R_N = y_R_N - al.c_R_N;
-		r.x_R_F = x_R_F - al.a_R_F * y_R_F - al.b_R_F; r.y_R_F = y_R_F - al.c_R_F;
+		r.L_2_F.x = L_2_F.x - al.a_L_2_F * L_2_F.y - al.b_L_2_F; r.L_2_F.y = L_2_F.y - al.c_L_2_F;
+		r.L_2_N.x = L_2_N.x - al.a_L_2_N * L_2_N.y - al.b_L_2_N; r.L_2_N.y = L_2_N.y - al.c_L_2_N;
+		r.L_1_F.x = L_1_F.x - al.a_L_1_F * L_1_F.y - al.b_L_1_F; r.L_1_F.y = L_1_F.y - al.c_L_1_F;
+                                                                                               
+		r.R_1_F.x = R_1_F.x - al.a_R_1_F * R_1_F.y - al.b_R_1_F; r.R_1_F.y = R_1_F.y - al.c_R_1_F;
+		r.R_2_N.x = R_2_N.x - al.a_R_2_N * R_2_N.y - al.b_R_2_N; r.R_2_N.y = R_2_N.y - al.c_R_2_N;
+		r.R_2_F.x = R_2_F.x - al.a_R_2_F * R_2_F.y - al.b_R_2_F; r.R_2_F.y = R_2_F.y - al.c_R_2_F;
 
 		return r;
 	}
-*/
 
 	// TODO: remove hard-coded z positions
 	/*
@@ -599,8 +690,8 @@ struct Analysis
 	std::vector<unsigned int> cuts;	// list of active cuts
 
 	// analysis cuts (rad)
-	double th_y_lcut_L, th_y_lcut_R, th_y_lcut;
-	double th_y_hcut_L, th_y_hcut_R, th_y_hcut;
+	double th_y_lcut_L, th_y_lcut_R;
+	double th_y_hcut_L, th_y_hcut_R;
 	
 	double th_x_lcut;
 	double th_x_hcut;
@@ -714,8 +805,8 @@ struct Analysis
 		printf("\n");
 		printf("th_x_lcut=%E\n", th_x_lcut);
 		printf("th_x_hcut=%E\n", th_x_hcut);
-		printf("th_y_lcut_L=%E, th_y_lcut_R=%E, th_y_lcut=%E\n", th_y_lcut_L, th_y_lcut_R, th_y_lcut);
-		printf("th_y_hcut_L=%E, th_y_hcut_R=%E, th_y_hcut=%E\n", th_y_hcut_L, th_y_hcut_R, th_y_hcut);
+		printf("th_y_lcut_L=%E, th_y_lcut_R=%E\n", th_y_lcut_L, th_y_lcut_R);
+		printf("th_y_hcut_L=%E, th_y_hcut_R=%E\n", th_y_hcut_L, th_y_hcut_R);
 
 		printf("\n");
 		printf("si_th_x_1arm_L=%E, si_th_x_1arm_R=%E, si_th_x_1arm_unc=%E\n", si_th_x_1arm_L, si_th_x_1arm_R, si_th_x_1arm_unc);
