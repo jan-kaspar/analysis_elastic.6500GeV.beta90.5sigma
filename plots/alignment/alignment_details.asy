@@ -17,7 +17,16 @@ drawGridDef = true;
 
 TGraph_errorBar = None;
 
-string period = "period 1";
+//string period = "period 2";
+string period = "period 5";
+
+//----------------------------------------------------------------------------------------------------
+
+for (int ui : units.keys)
+{
+	NewPad(false);
+	label("{\SetFontSizesXX " + unit_labels[ui] + "}");
+}
 
 //----------------------------------------------------------------------------------------------------
 NewRow();
@@ -26,10 +35,10 @@ for (int ui : units.keys)
 {
 	NewPad("$y\ung{mm}$", "$\hbox{mean } x\ung{mm}$");
 
-	draw(rGetObj(topDir+dataset+"/alignment.root", period + "/unit "+units[ui]+"/horizontal/horizontal profile/p"), "d0,eb", blue);
-	draw(rGetObj(topDir+dataset+"/alignment.root", period + "/unit "+units[ui]+"/horizontal/horizontal profile/p|ff"), "l", red+1pt);
+	draw(RootGetObject(topDir+dataset+"/alignment.root", period + "/unit "+units[ui]+"/horizontal/horizontal profile/p"), "d0,eb", blue);
+	draw(RootGetObject(topDir+dataset+"/alignment.root", period + "/unit "+units[ui]+"/horizontal/horizontal profile/p|ff"), "l", red+1pt);
 	
-	limits((-30, -0.3), (+30, +0.3), Crop);
+	limits((-30, -0.2), (+30, +0.2), Crop);
 	AttachLegend(unit_labels[ui], NE, NE);
 }
 
@@ -41,10 +50,10 @@ for (int ui : units.keys)
 	NewPad("$y\ung{mm}$", "");
 	scale(Linear, Log);
 
-	draw(rGetObj(topDir+dataset+"/alignment.root", period + "/unit "+units[ui]+"/vertical/y_hist|y_hist"), "d0,vl", blue);
-	draw(rGetObj(topDir+dataset+"/alignment.root", period + "/unit "+units[ui]+"/vertical/y_hist|y_hist_range"), "d0,vl", red);
+	draw(RootGetObject(topDir+dataset+"/alignment.root", period + "/unit "+units[ui]+"/vertical/y_hist|y_hist"), "d0,vl", blue);
+	draw(RootGetObject(topDir+dataset+"/alignment.root", period + "/unit "+units[ui]+"/vertical/y_hist|y_hist_range"), "d0,vl", red);
 
-	limits((-30, 1), (+30, 2e2), Crop);
+	limits((-30, 1), (+30, 2e3), Crop);
 	AttachLegend(unit_labels[ui], NE, NE);
 }
 
@@ -56,8 +65,8 @@ for (int ui : units.keys)
 {
 	NewPad("$\de y\ung{mm}$", "");
 
-	draw(rGetObj(topDir+dataset+"/alignment.root", period + "/unit "+units[ui]+"/vertical/g_max_diff"), "l,p", heavygreen, mCi+1pt+heavygreen);
+	draw(RootGetObject(topDir+dataset+"/alignment.root", period + "/unit "+units[ui]+"/vertical/g_max_diff"), "l,p", heavygreen, mCi+1pt+heavygreen);
 
-	limits((-2.5, 0), (+2.5, 1), Crop);
+	limits((-1, 0), (+1, 0.4), Crop);
 	AttachLegend(unit_labels[ui], NE, NE);
 }

@@ -93,12 +93,12 @@ void Init_base()
 	anal.alignment_t0 = 16000.;		// beginning of the first time-slice
 	anal.alignment_ts = 10.*60.;	// time-slice in s
 	
-	anal.alignmentYRanges["L_2_F"] = Analysis::AlignmentYRange(-23., -3.7, +3.8, +23.);
-	anal.alignmentYRanges["L_2_N"] = Analysis::AlignmentYRange(-20., -3.5, +3.4, +21.);
-	anal.alignmentYRanges["L_1_F"] = Analysis::AlignmentYRange(-20., -3.4, +3.3, +20.);
-	anal.alignmentYRanges["R_1_F"] = Analysis::AlignmentYRange(-20., -3.3, +3.5, +20.);
-	anal.alignmentYRanges["R_2_N"] = Analysis::AlignmentYRange(-20., -3.4, +5.0, +20.);
-	anal.alignmentYRanges["R_2_F"] = Analysis::AlignmentYRange(-23., -3.8, +3.9, +23.);
+	anal.alignmentYRanges["L_2_F"] = Analysis::AlignmentYRange(-20., -3.7, +3.8, +20.);
+	anal.alignmentYRanges["L_2_N"] = Analysis::AlignmentYRange(-17., -3.5, +3.4, +17.);
+	anal.alignmentYRanges["L_1_F"] = Analysis::AlignmentYRange(-17., -3.4, +3.3, +17.);
+	anal.alignmentYRanges["R_1_F"] = Analysis::AlignmentYRange(-17., -3.3, +3.5, +17.);
+	anal.alignmentYRanges["R_2_N"] = Analysis::AlignmentYRange(-17., -3.4, +5.0, +17.);
+	anal.alignmentYRanges["R_2_F"] = Analysis::AlignmentYRange(-20., -3.8, +3.9, +20.);
 
 #if 0
 	// TODO

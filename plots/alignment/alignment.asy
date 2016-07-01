@@ -20,25 +20,34 @@ drawGridDef = true;
 TGraph_errorBar = None;
 
 //----------------------------------------------------------------------------------------------------
+
+for (int ui : units.keys)
+{
+	NewPad(false);
+	label("{\SetFontSizesXX " + unit_labels[ui] + "}");
+}
+
+
+//----------------------------------------------------------------------------------------------------
 NewRow();
 
 for (int ui : units.keys)
 {
 	NewPad("time $\ung{h}$", "tilt $\ung{mrad}$", axesAbove=false);
 	currentpad.yTicks = RightTicks(1., 0.2);
-	DrawRunBands(-4, +4);
+	DrawRunBands(-2, +2);
 
 	for (int di : datasets.keys)
 	{
-		draw(swToHours, rGetObj(topDir+datasets[di]+"/alignment.root", "global/"+units[ui]+"/a_p"), "p,l,eb", cyan, mCi+1pt+cyan);
-		draw(swToHours, rGetObj(topDir+datasets[di]+"/alignment.root", "global/"+units[ui]+"/a_g"), "p,l,eb", green, mCi+1pt+green);
+		draw(swToHours, RootGetObject(topDir+datasets[di]+"/alignment.root", "global/"+units[ui]+"/a_p"), "p,l,eb", cyan, mCi+1pt+cyan);
+		draw(swToHours, RootGetObject(topDir+datasets[di]+"/alignment.root", "global/"+units[ui]+"/a_g"), "p,l,eb", green, mCi+1pt+green);
 		
-		draw(swToHours, rGetObj(topDir+datasets[di]+"/alignment.root", "global/"+units[ui]+"/a"), "p,l,eb", blue, mCi+1pt+blue);
-	}
+		draw(swToHours, RootGetObject(topDir+datasets[di]+"/alignment.root", "global/"+units[ui]+"/a"), "p,l,eb", blue, mCi+1pt+blue);
 	
-	//draw(swToHours, rGetObj("../overall_alignment/alignment_fit.root", ""+units[ui]+"/a_fit"), "l", red+1.5pt);
+		draw(swToHours, RootGetObject(topDir+datasets[di]+"/alignment_fit.root", ""+units[ui]+"/a_fit"), "l", red+1.5pt);
+	}
 
-	limits((time_min, -4), (time_max, +4), Crop);
+	limits((time_min, -2), (time_max, +2), Crop);
 	AttachLegend(unit_labels[ui], SE, SE);
 }
 
@@ -48,28 +57,30 @@ NewRow();
 for (int ui : units.keys)
 {
 	NewPad("time $\ung{h}$", "horizontal position $\ung{\mu m}$", axesAbove=false);
-	currentpad.yTicks = RightTicks(20., 10.);
-	DrawRunBands(-100, +100);
+	currentpad.yTicks = RightTicks(10., 2.);
+	DrawRunBands(-40, +40);
 
 	/*
 	TGraph_reducePoints = 30;
-	draw(unixToHours * shift(0, sh_x[ui]), rGetObj("bpm.root", "LHC.BOFSU:POSITIONS_H::"+bpms[ui]), black);
+	draw(unixToHours * shift(0, sh_x[ui]), RootGetObject("bpm.root", "LHC.BOFSU:POSITIONS_H::"+bpms[ui]), black);
 	TGraph_reducePoints = 1; 
 	*/
 
 	for (int di : datasets.keys)
 	{
-		draw(swToHours, rGetObj(topDir+datasets[di]+"/alignment.root", "global/"+units[ui]+"/b_p"), "p,l,eb", cyan, mCi+1pt+cyan);
-		draw(swToHours, rGetObj(topDir+datasets[di]+"/alignment.root", "global/"+units[ui]+"/b_g"), "p,l,eb", green, mCi+1pt+green);
+		draw(swToHours, RootGetObject(topDir+datasets[di]+"/alignment.root", "global/"+units[ui]+"/b_p"), "p,l,eb", cyan, mCi+1pt+cyan);
+		draw(swToHours, RootGetObject(topDir+datasets[di]+"/alignment.root", "global/"+units[ui]+"/b_g"), "p,l,eb", green, mCi+1pt+green);
 
-		draw(swToHours, rGetObj(topDir+datasets[di]+"/alignment.root", "global/"+units[ui]+"/b"), "p,l,eb", blue+1pt, mCi+1pt+blue);
+		draw(swToHours, RootGetObject(topDir+datasets[di]+"/alignment.root", "global/"+units[ui]+"/b"), "p,l,eb", blue+1pt, mCi+1pt+blue);
+	
+		draw(shift(0,   0)*swToHours, RootGetObject(topDir+datasets[di]+"/alignment_fit.root", ""+units[ui]+"/b_fit"), "l", red+1.5pt);
 	}
 	
-	//draw(shift(0, +50)*swToHours, rGetObj("../overall_alignment/alignment_fit.root", ""+units[ui]+"/b_fit"), "l", red+dashed);
-	//draw(shift(0,   0)*swToHours, rGetObj("../overall_alignment/alignment_fit.root", ""+units[ui]+"/b_fit"), "l", red+1.5pt);
-	//draw(shift(0, -50)*swToHours, rGetObj("../overall_alignment/alignment_fit.root", ""+units[ui]+"/b_fit"), "l", red+dashed);
+	//draw(shift(0, +50)*swToHours, RootGetObject("../overall_alignment/alignment_fit.root", ""+units[ui]+"/b_fit"), "l", red+dashed);
+	//draw(shift(0,   0)*swToHours, RootGetObject("../overall_alignment/alignment_fit.root", ""+units[ui]+"/b_fit"), "l", red+1.5pt);
+	//draw(shift(0, -50)*swToHours, RootGetObject("../overall_alignment/alignment_fit.root", ""+units[ui]+"/b_fit"), "l", red+dashed);
 
-	limits((time_min, -100), (time_max, +100), Crop);
+	limits((time_min, -40), (time_max, +40), Crop);
 	AttachLegend(unit_labels[ui], SE, SE);
 }
 
@@ -80,32 +91,34 @@ for (int ui : units.keys)
 {
 	NewPad("time $\ung{h}$", "vertical position $\ung{\mu m}$", axesAbove=false);
 	currentpad.yTicks = RightTicks(100., 20.);
-	DrawRunBands(-500, +500);
+	DrawRunBands(-400, +400);
 
 	/*
 	TGraph_reducePoints = 30;
-	draw(unixToHours*shift(0, sh_y[ui]), rGetObj("bpm.root", "LHC.BOFSU:POSITIONS_V::"+bpms[ui]), black);
+	draw(unixToHours*shift(0, sh_y[ui]), RootGetObject("bpm.root", "LHC.BOFSU:POSITIONS_V::"+bpms[ui]), black);
 	TGraph_reducePoints = 1;
 	*/
 
 	for (int di : datasets.keys)
 	{
 		pen p = StdPen(di+1);
-		draw(swToHours, rGetObj(topDir+datasets[di]+"/alignment.root", "global/"+units[ui]+"/c_min_diff"), "p,l,eb", cyan, mCi+1pt+cyan);
-		//draw(swToHours, rGetObj(topDir+datasets[di]+"/alignment.root", "global/"+units[ui]+"/c_prob"), "p,l,eb", green, mCi+1pt+green);
-		draw(swToHours, rGetObj(topDir+datasets[di]+"/alignment.root", "global/"+units[ui]+"/c_mean_diff_sq"), "p,l,eb", magenta, mCi+1pt+magenta);
-		draw(swToHours, rGetObj(topDir+datasets[di]+"/alignment.root", "global/"+units[ui]+"/c_hist_chi_sq"), "p,l,eb", green, mCi+1pt+green);
+		draw(swToHours, RootGetObject(topDir+datasets[di]+"/alignment.root", "global/"+units[ui]+"/c_min_diff"), "p,l,eb", cyan, mCi+1pt+cyan);
+		//draw(swToHours, RootGetObject(topDir+datasets[di]+"/alignment.root", "global/"+units[ui]+"/c_prob"), "p,l,eb", green, mCi+1pt+green);
+		draw(swToHours, RootGetObject(topDir+datasets[di]+"/alignment.root", "global/"+units[ui]+"/c_mean_diff_sq"), "p,l,eb", magenta, mCi+1pt+magenta);
+		draw(swToHours, RootGetObject(topDir+datasets[di]+"/alignment.root", "global/"+units[ui]+"/c_hist_chi_sq"), "p,l,eb", green, mCi+1pt+green);
 		
-		draw(swToHours, rGetObj(topDir+datasets[di]+"/alignment.root", "global/"+units[ui]+"/c"), "p,l,eb", blue+1pt, mCi+1pt+blue);
+		draw(swToHours, RootGetObject(topDir+datasets[di]+"/alignment.root", "global/"+units[ui]+"/c"), "p,l,eb", blue+1pt, mCi+1pt+blue);
+	
+		draw(swToHours*shift(0,    0), RootGetObject(topDir+datasets[di]+"/alignment_fit.root", ""+units[ui]+"/c_fit"), "l", red+1.5pt);
 	}
 	
 	/*
-	draw(swToHours*shift(0, +100), rGetObj("../overall_alignment/alignment_fit.root", ""+units[ui]+"/c_fit"), "l", red+dashed);
-	draw(swToHours*shift(0,    0), rGetObj("../overall_alignment/alignment_fit.root", ""+units[ui]+"/c_fit"), "l", red+1.5pt);
-	draw(swToHours*shift(0, -100), rGetObj("../overall_alignment/alignment_fit.root", ""+units[ui]+"/c_fit"), "l", red+dashed);
+	draw(swToHours*shift(0, +100), RootGetObject("../overall_alignment/alignment_fit.root", ""+units[ui]+"/c_fit"), "l", red+dashed);
+	draw(swToHours*shift(0,    0), RootGetObject("../overall_alignment/alignment_fit.root", ""+units[ui]+"/c_fit"), "l", red+1.5pt);
+	draw(swToHours*shift(0, -100), RootGetObject("../overall_alignment/alignment_fit.root", ""+units[ui]+"/c_fit"), "l", red+dashed);
 	*/
 
-	limits((time_min, -500), (time_max, +500), Crop);
+	limits((time_min, -400), (time_max, +400), Crop);
 	AttachLegend(unit_labels[ui], SE, SE);
 }
 

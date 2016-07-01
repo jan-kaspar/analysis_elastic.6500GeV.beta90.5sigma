@@ -284,7 +284,7 @@ void DoVerticalAlignment(TGraph *g_t, TGraph *gw_t, TGraph *g_b, TGraph *gw_b,
 	printf(">> DoVerticalAlignment\n");
 
 	// rely on user cuts
-	double bs_y_cut = 0.;	// 3 * si_th_y * L_y_F = 3 * 1.9E-6 * 270m = 1.5 mm
+	double bs_y_cut = 1.5;	// 3 * si_th_y * L_y_F = 3 * 1.9E-6 * 270m = 1.5 mm
 	printf("\tbs_y_cut = %.3f mm\n", bs_y_cut);
 
 	// prepare samples, determine ranges 
