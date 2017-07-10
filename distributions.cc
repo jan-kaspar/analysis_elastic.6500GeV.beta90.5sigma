@@ -115,7 +115,7 @@ int main(int argc, char **argv)
 		return rcIncompatibleDiagonal;
 
 	// default parameters
-	unsigned int detailsLevel = 10; 	// 0: no details, 1: some details, >= 2 all details
+	unsigned int detailsLevel = 0; 	// 0: no details, 1: some details, >= 2 all details
 	bool overrideCutSelection = false;	// whether the default cut selection should be overriden by the command-line selection
 	string cutSelectionString;
 	string outputDir = ".";
@@ -196,7 +196,6 @@ int main(int argc, char **argv)
 			continue;
 		}
 
-
 		if (strcmp(argv[i], "-eg-index") == 0)
 		{
 			if (argc-1 > i)
@@ -274,28 +273,36 @@ int main(int argc, char **argv)
 	vector<string> binnings;
 	binnings.push_back("ub");
 	binnings.push_back("eb");
+	// get input
+	TChain *ch_in = new TChain("distilled");
+	printf(">> input chain\n");
+	for (const auto &ntupleDir : distilledNtuples)
+	{
+		string f = ntupleDir + "/distill_" + argv[1] + ".root";
+		printf("+ %s\n", f.c_str());
+		ch_in->Add(f.c_str());
+	}
+	printf("%llu entries\n", ch_in->GetEntries());
 
 	// init files
-	TFile *inF = new TFile((inputDir + "/distill_" + argv[1] + ".root").c_str());
 	TFile *outF = new TFile((outputDir+"/distributions_" + argv[1] + ".root").c_str(), "recreate");
 
 	// get input data
-	TTree *inT = (TTree *) inF->Get("distilled");
 	EventRed ev;
-	inT->SetBranchAddress("v_L_1_F", &ev.h.L_1_F.v); inT->SetBranchAddress("x_L_1_F", &ev.h.L_1_F.x); inT->SetBranchAddress("y_L_1_F", &ev.h.L_1_F.y);
-	inT->SetBranchAddress("v_L_2_N", &ev.h.L_2_N.v); inT->SetBranchAddress("x_L_2_N", &ev.h.L_2_N.x); inT->SetBranchAddress("y_L_2_N", &ev.h.L_2_N.y);
-	inT->SetBranchAddress("v_L_2_F", &ev.h.L_2_F.v); inT->SetBranchAddress("x_L_2_F", &ev.h.L_2_F.x); inT->SetBranchAddress("y_L_2_F", &ev.h.L_2_F.y);
+	ch_in->SetBranchAddress("v_L_1_F", &ev.h.L_1_F.v); ch_in->SetBranchAddress("x_L_1_F", &ev.h.L_1_F.x); ch_in->SetBranchAddress("y_L_1_F", &ev.h.L_1_F.y);
+	ch_in->SetBranchAddress("v_L_2_N", &ev.h.L_2_N.v); ch_in->SetBranchAddress("x_L_2_N", &ev.h.L_2_N.x); ch_in->SetBranchAddress("y_L_2_N", &ev.h.L_2_N.y);
+	ch_in->SetBranchAddress("v_L_2_F", &ev.h.L_2_F.v); ch_in->SetBranchAddress("x_L_2_F", &ev.h.L_2_F.x); ch_in->SetBranchAddress("y_L_2_F", &ev.h.L_2_F.y);
 
-	inT->SetBranchAddress("v_R_1_F", &ev.h.R_1_F.v); inT->SetBranchAddress("x_R_1_F", &ev.h.R_1_F.x); inT->SetBranchAddress("y_R_1_F", &ev.h.R_1_F.y);
-	inT->SetBranchAddress("v_R_2_N", &ev.h.R_2_N.v); inT->SetBranchAddress("x_R_2_N", &ev.h.R_2_N.x); inT->SetBranchAddress("y_R_2_N", &ev.h.R_2_N.y);
-	inT->SetBranchAddress("v_R_2_F", &ev.h.R_2_F.v); inT->SetBranchAddress("x_R_2_F", &ev.h.R_2_F.x); inT->SetBranchAddress("y_R_2_F", &ev.h.R_2_F.y);	
+	ch_in->SetBranchAddress("v_R_1_F", &ev.h.R_1_F.v); ch_in->SetBranchAddress("x_R_1_F", &ev.h.R_1_F.x); ch_in->SetBranchAddress("y_R_1_F", &ev.h.R_1_F.y);
+	ch_in->SetBranchAddress("v_R_2_N", &ev.h.R_2_N.v); ch_in->SetBranchAddress("x_R_2_N", &ev.h.R_2_N.x); ch_in->SetBranchAddress("y_R_2_N", &ev.h.R_2_N.y);
+	ch_in->SetBranchAddress("v_R_2_F", &ev.h.R_2_F.v); ch_in->SetBranchAddress("x_R_2_F", &ev.h.R_2_F.x); ch_in->SetBranchAddress("y_R_2_F", &ev.h.R_2_F.y);	
 
-	inT->SetBranchAddress("timestamp", &ev.timestamp);
-	inT->SetBranchAddress("run_num", &ev.run_num);
-	inT->SetBranchAddress("bunch_num", &ev.bunch_num);
-	inT->SetBranchAddress("event_num", &ev.event_num);
-	inT->SetBranchAddress("trigger_num", &ev.trigger_num);
-	inT->SetBranchAddress("trigger_bits", &ev.trigger_bits);
+	ch_in->SetBranchAddress("timestamp", &ev.timestamp);
+	ch_in->SetBranchAddress("run_num", &ev.run_num);
+	ch_in->SetBranchAddress("bunch_num", &ev.bunch_num);
+	ch_in->SetBranchAddress("event_num", &ev.event_num);
+	ch_in->SetBranchAddress("trigger_num", &ev.trigger_num);
+	ch_in->SetBranchAddress("trigger_bits", &ev.trigger_bits);
 
 	// get time-dependent corrections
 	TGraph *corrg_pileup = NULL;
@@ -377,7 +384,7 @@ int main(int argc, char **argv)
 	TGraph *g_ev_num_vs_timestamp = new TGraph(); g_ev_num_vs_timestamp->SetName("g_ev_num_vs_timestamp"); g_ev_num_vs_timestamp->SetTitle(";timestamp;ev_num");
 	TGraph *g_tr_num_vs_timestamp = new TGraph(); g_tr_num_vs_timestamp->SetName("g_tr_num_vs_timestamp"); g_tr_num_vs_timestamp->SetTitle(";timestamp;tr_num");
 	TGraph *g_bunch_num_vs_timestamp = new TGraph(); g_bunch_num_vs_timestamp->SetName("g_bunch_num_vs_timestamp"); g_bunch_num_vs_timestamp->SetTitle(";timestamp;bunch");
-	TGraph *g_selected_bunch_num_vs_timestamp = new TGraph(); g_selected_bunch_num_vs_timestamp->SetName("g_selected_bunch_num_vs_timestamp"); g_selected_bunch_num_vs_timestamp->SetTitle(";timestamp;selected_bunch");
+	TGraph *g_bunch_num_vs_timestamp_all = new TGraph(); g_bunch_num_vs_timestamp_all->SetName("g_bunch_num_vs_timestamp_all"); g_bunch_num_vs_timestamp_all->SetTitle(";timestamp;bunch");
 	
 	TGraph *g_timestamp_vs_ev_idx_dgn = new TGraph(); g_timestamp_vs_ev_idx_dgn->SetName("g_timestamp_vs_ev_idx_dgn"); g_timestamp_vs_ev_idx_dgn->SetTitle(";event index in distilled TTree;timestamp");
 	TGraph *g_timestamp_vs_ev_idx_sel = new TGraph(); g_timestamp_vs_ev_idx_sel->SetName("g_timestamp_vs_ev_idx_sel"); g_timestamp_vs_ev_idx_sel->SetTitle(";event index in distilled TTree;timestamp");
@@ -761,9 +768,9 @@ int main(int argc, char **argv)
 	map<unsigned int, pair<unsigned int, unsigned int> > runTimestampBoundaries;
 
 	// build histograms
-	for (int ev_idx = 0; ev_idx < inT->GetEntries(); ++ev_idx)
+	for (int ev_idx = 0; ev_idx < ch_in->GetEntries(); ++ev_idx)
 	{
-		inT->GetEntry(ev_idx);
+		ch_in->GetEntry(ev_idx);
 
 		// remove troublesome runs
 		unsigned int run = ev.run_num / 100000;
@@ -792,6 +799,8 @@ int main(int argc, char **argv)
 			if ( (time_group % time_group_divisor) != time_group_remainder)
 				continue;
 		}
+		
+		g_bunch_num_vs_timestamp_all->SetPoint(g_bunch_num_vs_timestamp_all->GetN(), ev.timestamp, ev.bunch_num);
 
 		// diagonal cut
 		bool allDiagonalRPs = (ev.h.L_1_F.v && ev.h.L_2_F.v && ev.h.R_1_F.v && ev.h.R_2_F.v);
@@ -947,8 +956,6 @@ int main(int argc, char **argv)
 		// elastic cut
 		if (!select)
 			continue;
-
-		g_selected_bunch_num_vs_timestamp->SetPoint(g_selected_bunch_num_vs_timestamp->GetN(), ev.timestamp, ev.bunch_num);
 
 		N_el++;
 
@@ -1658,7 +1665,7 @@ int main(int argc, char **argv)
 		//g_ev_num_vs_timestamp->Write();
 		//g_tr_num_vs_timestamp->Write();
 		g_bunch_num_vs_timestamp->Write();
-		g_selected_bunch_num_vs_timestamp->Write();
+		g_bunch_num_vs_timestamp_all->Write();
 	}
 	
 	TDirectory *hitDistDir = outF->mkdir("hit distributions");

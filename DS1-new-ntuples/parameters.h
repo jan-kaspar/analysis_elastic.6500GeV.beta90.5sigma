@@ -5,6 +5,8 @@
 
 double timestamp0 = 1444687200;
 
+vector<string> distilledNtuples;
+
 vector<AlignmentSource> alignmentSources;
 Analysis anal;
 Environment env;
@@ -16,6 +18,15 @@ string luminosity_data_file;
 
 void Init_base()
 {
+	// list of subdirectories with distilled ntuples
+	distilledNtuples.push_back("block-run9836");
+	distilledNtuples.push_back("block-run9838");
+	distilledNtuples.push_back("block-run9840");
+	distilledNtuples.push_back("block-run9841");
+	distilledNtuples.push_back("block-run9843");
+	distilledNtuples.push_back("block-run9844");
+	distilledNtuples.push_back("block-run9845");
+
 	// selection of bunches
 	keepAllBunches = false;
 	bunchMap[9836] = { 1825 };

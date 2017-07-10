@@ -6,7 +6,7 @@ string topDir = "../../";
 
 TH2_palette = Gradient(blue, heavygreen, yellow, red);
 
-int rebin = 10;
+int rebin = 20;
 
 string datasets[] = {
 	"DS1",
@@ -21,30 +21,29 @@ xTicksDef = LeftTicks(Step=1, step=0.5);
 
 //----------------------------------------------------------------------------------------------------
 
-for (int dsi : datasets.keys)
+for (int dgni : dgns.keys)
 {
 	NewRow();
 
-	NewPad(false);
-	label("{\SetFontSizesXX " + datasets[dsi] + "}");
+	//NewPad(false);
+	//label("{\SetFontSizesXX " + datasets[dsi] + "}");
+	
+	NewPad("time$\ung{s}$", "rate$\ung{Hz}$");
+	DrawRunBands(0, +20);
 
-	for (int dgni : dgns.keys)
+	for (int dsi : datasets.keys)
 	{
-		NewPad("time$\ung{s}$", "rate$\ung{Hz}$");
-		DrawRunBands(0, +20);
+		pen p = StdPen(dsi + 1);
+		if (dsi > 0)
+			p += dashed;
 
 		RootObject obj = RootGetObject(topDir+datasets[dsi]+"/distributions_"+dgns[dgni]+".root", "metadata/h_timestamp_dgn");
 		obj.vExec("Rebin", rebin);
-		draw(scale(1, 1./rebin)*swToHours, obj, "vl", blue);
-	
-		/*
-		RootObject obj = RootGetObject(topDir+datasets[di]+"/distributions_"+dgns[dgni]+".root", "metadata/h_timestamp_sel");
-		obj.vExec("Rebin", rebin);
-		draw(scale(1, 1./rebin)*swToHours, obj, "vl", red);
-		*/
+		draw(scale(1, 1./rebin)*swToHours, obj, "vl", p, datasets[dsi]);
 
 		//limits((23, 0), (32.5, +20), Crop);
-		layer();
-		AttachLegend(dgn_labs[dgni]);
+		//layer();
 	}
+	
+	AttachLegend(dgn_labs[dgni], NW, NE);
 }
